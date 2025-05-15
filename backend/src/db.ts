@@ -22,7 +22,7 @@ export async function initializeDatabase() {
 
             CREATE TABLE IF NOT EXISTS categories (
                                                       id SERIAL PRIMARY KEY,
-                                                      name VARCHAR(100) UNIQUE NOT NULL,
+                                                      name VARCHAR(255) UNIQUE NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
@@ -57,10 +57,7 @@ export async function initializeDatabase() {
                 post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
                 comment_id INTEGER REFERENCES comments(id) ON DELETE CASCADE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                CHECK (
-            (post_id IS NOT NULL AND comment_id IS NULL) OR
-            (post_id IS NULL AND comment_id IS NOT NULL)
-                )
+                CONSTRAINT unique_like UNIQUE (user_id, post_id, comment_id)
                 );
         `);
         console.log('Database schema initialized');
